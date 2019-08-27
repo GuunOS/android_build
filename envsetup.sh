@@ -35,7 +35,7 @@ Environment options:
 Look at the source to view more functions. The complete list is:
 EOF
     T=$(gettop)
-    for i in `cat $T/build/envsetup.sh $T/vendor/xenonhd/build/envsetup.sh | sed -n "/^[[:blank:]]*function /s/function \([a-z_]*\).*/\1/p" | sort | uniq`; do
+    for i in `cat $T/build/envsetup.sh $T/vendor/guun/build/envsetup.sh | sed -n "/^[[:blank:]]*function /s/function \([a-z_]*\).*/\1/p" | sort | uniq`; do
       echo "$i"
     done | column
 }
@@ -45,8 +45,8 @@ function build_build_var_cache()
 {
     T=$(gettop)
     # Grep out the variable names from the script.
-    cached_vars=`cat $T/build/envsetup.sh $T/vendor/xenonhd/build/envsetup.sh | tr '()' '  ' | awk '{for(i=1;i<=NF;i++) if($i~/get_build_var/) print $(i+1)}' | sort -u | tr '\n' ' '`
-    cached_abs_vars=`cat $T/build/envsetup.sh $T/vendor/xenonhd/build/envsetup.sh | tr '()' '  ' | awk '{for(i=1;i<=NF;i++) if($i~/get_abs_build_var/) print $(i+1)}' | sort -u | tr '\n' ' '`
+    cached_vars=`cat $T/build/envsetup.sh $T/vendor/guun/build/envsetup.sh | tr '()' '  ' | awk '{for(i=1;i<=NF;i++) if($i~/get_build_var/) print $(i+1)}' | sort -u | tr '\n' ' '`
+    cached_abs_vars=`cat $T/build/envsetup.sh $T/vendor/guun/build/envsetup.sh | tr '()' '  ' | awk '{for(i=1;i<=NF;i++) if($i~/get_abs_build_var/) print $(i+1)}' | sort -u | tr '\n' ' '`
     # Call the build system to dump the "<val>=<value>" pairs as a shell script.
     build_dicts_script=`\cd $T; export CALLED_FROM_SETUP=true; export BUILD_SYSTEM=build/core; \
                         command make --no-print-directory -f build/core/config.mk \
@@ -132,13 +132,13 @@ function check_product()
         return
     fi
 
-    if (echo -n $1 | grep -q -e "^xenonhd_") ; then
-       XENONHD_BUILD=$(echo -n $1 | sed -e 's/^xenonhd_//g')
-       export BUILD_NUMBER=$((date +%s%N ; echo $XENONHD_BUILD; hostname) | openssl sha1 | sed -e 's/.*=//g; s/ //g' | cut -c1-10)
+    if (echo -n $1 | grep -q -e "^guun_") ; then
+       GUUN_BUILD=$(echo -n $1 | sed -e 's/^guun_//g')
+       export BUILD_NUMBER=$((date +%s%N ; echo $GUUN_BUILD; hostname) | openssl sha1 | sed -e 's/.*=//g; s/ //g' | cut -c1-10)
     else
-       XENONHD_BUILD=
+       GUUN_BUILD=
     fi
-    export XENONHD_BUILD
+    export GUUN_BUILD
 
         TARGET_PRODUCT=$1 \
         TARGET_BUILD_VARIANT= \
@@ -545,7 +545,7 @@ function print_lunch_menu()
     echo
     echo "You're building on" $uname
     echo
-    if [ "z${XENONHD_DEVICES_ONLY}" != "z" ]; then
+    if [ "z${GUUN_DEVICES_ONLY}" != "z" ]; then
        echo "Breakfast menu... pick a combo:"
     else
        echo "Lunch menu... pick a combo:"
@@ -559,7 +559,7 @@ function print_lunch_menu()
         i=$(($i+1))
     done | column
 
-    if [ "z${XENONHD_DEVICES_ONLY}" != "z" ]; then
+    if [ "z${GUUN_DEVICES_ONLY}" != "z" ]; then
        echo "... and don't forget the bacon!"
     fi
 
@@ -621,13 +621,13 @@ function lunch()
         # if we can't find a product, try to grab it off the TH github
         T=$(gettop)
         pushd $T > /dev/null
-        vendor/xenonhd/build/tools/roomservice.py $product
+        vendor/guun/build/tools/roomservice.py $product
         popd > /dev/null
         check_product $product
     else
         T=$(gettop)
         pushd $T > /dev/null
-        vendor/xenonhd/build/tools/roomservice.py $product true
+        vendor/guun/build/tools/roomservice.py $product true
         popd > /dev/null
     fi
     TARGET_PRODUCT=$product \
@@ -1703,7 +1703,7 @@ unset f
 
 # Add completions
 check_bash_version && {
-    dirs="sdk/bash_completion vendor/xenonhd/bash_completion"
+    dirs="sdk/bash_completion vendor/guun/bash_completion"
     for dir in $dirs; do
     if [ -d ${dir} ]; then
         for f in `/bin/ls ${dir}/[a-z]*.bash 2> /dev/null`; do
@@ -1716,4 +1716,4 @@ check_bash_version && {
 
 export ANDROID_BUILD_TOP=$(gettop)
 
-. $ANDROID_BUILD_TOP/vendor/xenonhd/build/envsetup.sh
+. $ANDROID_BUILD_TOP/vendor/guun/build/envsetup.sh

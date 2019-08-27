@@ -195,7 +195,7 @@ FIND_LEAVES_EXCLUDES := $(addprefix --prune=, $(SCAN_EXCLUDE_DIRS) .repo .git)
 $(call project-set-path-variant,recovery,RECOVERY_VARIANT,bootable/recovery)
 
 -include vendor/extra/BoardConfigExtra.mk
--include vendor/xenonhd/config/BoardConfigCM.mk
+-include vendor/guun/config/BoardConfigCM.mk
 
 # The build system exposes several variables for where to find the kernel
 # headers:
@@ -663,10 +663,10 @@ else
 endif
 
 # Rules for QCOM targets
-include vendor/xenonhd/build/core/qcom_target.mk
+include vendor/guun/build/core/qcom_target.mk
 
 # Rules for MTK targets
-include vendor/xenonhd/build/core/mtk_target.mk
+include vendor/guun/build/core/mtk_target.mk
 
 # ###############################################################
 # Set up final options.
@@ -920,13 +920,13 @@ ifneq ($(TARGET_COPY_FILES_OVERRIDES),)
     PRODUCT_COPY_FILES := $(filter-out $(TARGET_COPY_FILES_OVERRIDES), $(PRODUCT_COPY_FILES))
 endif
 
-ifneq ($(XENONHD_BUILD),)
+ifneq ($(GUUN_BUILD),)
 ## We need to be sure the global selinux policies are included
 ## last, to avoid accidental resetting by device configs
-$(eval include vendor/xenonhd/sepolicy/sepolicy.mk)
+$(eval include vendor/guun/sepolicy/sepolicy.mk)
 
 ifeq ($(BOARD_USES_QCOM_HARDWARE),true)
-$(eval include vendor/xenonhd/sepolicy/qcom/sepolicy.mk)
+$(eval include vendor/guun/sepolicy/qcom/sepolicy.mk)
 endif
 
 # Include any vendor specific config.mk file

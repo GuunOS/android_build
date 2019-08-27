@@ -1,6 +1,6 @@
 # List of variables we want to print in the build banner.
 print_build_config_vars := \
-  XENONHD_VERSION \
+  GUUN_VERSION \
   TARGET_PRODUCT \
   PLATFORM_VERSION \
   BUILD_ID \
@@ -122,7 +122,7 @@ endif # CALLED_FROM_SETUP
 ifneq ($(PRINT_BUILD_CONFIG),)
 HOST_OS_EXTRA:=$(shell python -c "import platform; print(platform.platform())")
 $(info ================Team Horizon================)
-$(info   XENONHD_VERSION=$(XENONHD_VERSION))
+$(info   GUUN_VERSION=$(GUUN_VERSION))
 $(info   TARGET_PRODUCT=$(TARGET_PRODUCT))
 $(info   PLATFORM_VERSION=$(PLATFORM_VERSION))
 $(info   BUILD_ID=$(BUILD_ID))
