@@ -35,7 +35,7 @@ Environment options:
 Look at the source to view more functions. The complete list is:
 EOF
     T=$(gettop)
-    for i in `cat $T/build/envsetup.sh $T/vendor/psycho/build/envsetup.sh | sed -n "/^[[:blank:]]*function /s/function \([a-z_]*\).*/\1/p" | sort | uniq`; do
+    for i in `cat $T/build/envsetup.sh $T/vendor/guun/build/envsetup.sh | sed -n "/^[[:blank:]]*function /s/function \([a-z_]*\).*/\1/p" | sort | uniq`; do
       echo "$i"
     done | column
 }
@@ -45,8 +45,8 @@ function build_build_var_cache()
 {
     T=$(gettop)
     # Grep out the variable names from the script.
-    cached_vars=`cat $T/build/envsetup.sh $T/vendor/psycho/build/envsetup.sh | tr '()' '  ' | awk '{for(i=1;i<=NF;i++) if($i~/get_build_var/) print $(i+1)}' | sort -u | tr '\n' ' '`
-    cached_abs_vars=`cat $T/build/envsetup.sh $T/vendor/psycho/build/envsetup.sh | tr '()' '  ' | awk '{for(i=1;i<=NF;i++) if($i~/get_abs_build_var/) print $(i+1)}' | sort -u | tr '\n' ' '`
+    cached_vars=`cat $T/build/envsetup.sh $T/vendor/guun/build/envsetup.sh | tr '()' '  ' | awk '{for(i=1;i<=NF;i++) if($i~/get_build_var/) print $(i+1)}' | sort -u | tr '\n' ' '`
+    cached_abs_vars=`cat $T/build/envsetup.sh $T/vendor/guun/build/envsetup.sh | tr '()' '  ' | awk '{for(i=1;i<=NF;i++) if($i~/get_abs_build_var/) print $(i+1)}' | sort -u | tr '\n' ' '`
     # Call the build system to dump the "<val>=<value>" pairs as a shell script.
     build_dicts_script=`\cd $T; export CALLED_FROM_SETUP=true; export BUILD_SYSTEM=build/core; \
                         command make --no-print-directory -f build/core/config.mk \
@@ -132,8 +132,8 @@ function check_product()
         return
     fi
 
-    if (echo -n $1 | grep -q -e "^psycho_") ; then
-        CM_BUILD=$(echo -n $1 | sed -e 's/^psycho_//g')
+    if (echo -n $1 | grep -q -e "^guun_") ; then
+        CM_BUILD=$(echo -n $1 | sed -e 's/^guun_//g')
         export BUILD_NUMBER=$( (date +%s%N ; echo $CM_BUILD; hostname) | openssl sha1 | sed -e 's/.*=//g; s/ //g' | cut -c1-10 )
     elif (echo -n $1 | grep -q -e "^cm_") ; then
         # Fall back to lineage_<product>
@@ -625,13 +625,13 @@ function lunch()
         # if we can't find a product, try to grab it off the CM github
         T=$(gettop)
         cd $T > /dev/null
-        vendor/psycho/build/tools/roomservice.py $product
+        vendor/guun/build/tools/roomservice.py $product
         cd - > /dev/null
         check_product $product
     else
         T=$(gettop)
         cd $T > /dev/null
-        vendor/psycho/build/tools/roomservice.py $product true
+        vendor/guun/build/tools/roomservice.py $product true
         cd - > /dev/null
     fi
     TARGET_PRODUCT=$product \
@@ -1707,7 +1707,7 @@ unset f
 
 # Add completions
 check_bash_version && {
-    dirs="sdk/bash_completion vendor/psycho/bash_completion"
+    dirs="sdk/bash_completion vendor/guun/bash_completion"
     for dir in $dirs; do
     if [ -d ${dir} ]; then
         for f in `/bin/ls ${dir}/[a-z]*.bash 2> /dev/null`; do
@@ -1720,4 +1720,4 @@ check_bash_version && {
 
 export ANDROID_BUILD_TOP=$(gettop)
 
-. $ANDROID_BUILD_TOP/vendor/psycho/build/envsetup.sh && . scripts/nova.sh
+. $ANDROID_BUILD_TOP/vendor/guun/build/envsetup.sh && . scripts/nova.sh

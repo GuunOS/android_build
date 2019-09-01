@@ -1681,13 +1681,13 @@ $(BUILT_OTATOOLS_PACKAGE): zip_root := $(call intermediates-dir-for,PACKAGING,ot
 $(BUILT_OTATOOLS_PACKAGE): $(OTATOOLS) | $(ACP)
 	@echo "Package OTA tools: $@"
 	$(hide) rm -rf $@ $(zip_root)
-	$(hide) mkdir -p $(dir $@) $(zip_root)/bin $(zip_root)/framework $(zip_root)/releasetools $(zip_root)/system/extras/verity $(zip_root)/external/vboot_reference/tests/devkeys $(zip_root)/vendor/psycho/build/tools
+	$(hide) mkdir -p $(dir $@) $(zip_root)/bin $(zip_root)/framework $(zip_root)/releasetools $(zip_root)/system/extras/verity $(zip_root)/external/vboot_reference/tests/devkeys $(zip_root)/vendor/guun/build/tools
 	$(call copy-files-with-structure,$(OTATOOLS),$(HOST_OUT)/,$(zip_root))
 	$(hide) $(ACP) $(HOST_OUT_JAVA_LIBRARIES)/VeritySigner.jar $(zip_root)/framework/
 	$(hide) $(ACP) -p system/extras/verity/build_verity_metadata.py $(zip_root)/system/extras/verity/
 	$(hide) $(ACP) -p -r external/vboot_reference/tests/devkeys/* $(zip_root)/external/vboot_reference/tests/devkeys
 	$(hide) $(ACP) -r -d -p build/tools/releasetools/* $(zip_root)/releasetools
-	$(hide) $(ACP) -p vendor/psycho/build/tools/getb64key.py $(zip_root)/vendor/psycho/build/tools/
+	$(hide) $(ACP) -p vendor/guun/build/tools/getb64key.py $(zip_root)/vendor/guun/build/tools/
 	$(hide) rm -rf $@ $(zip_root)/releasetools/*.pyc
 	$(hide) (cd $(zip_root) && zip -qryX $(abspath $@) *)
 	$(hide) zip -qryX $(abspath $@) build/target/product/security/
@@ -2021,9 +2021,9 @@ ifdef BOARD_PREBUILT_VENDORIMAGE
 	$(hide) cp $(INSTALLED_VENDORIMAGE_TARGET) $(zip_root)/IMAGES/
 endif
 ifdef PRODUCT_DEFAULT_DEV_CERTIFICATE
-	$(hide) vendor/psycho/build/tools/getb64key.py $(PRODUCT_DEFAULT_DEV_CERTIFICATE).x509.pem > $(zip_root)/META/releasekey.txt
+	$(hide) vendor/guun/build/tools/getb64key.py $(PRODUCT_DEFAULT_DEV_CERTIFICATE).x509.pem > $(zip_root)/META/releasekey.txt
 else
-	$(hide) vendor/psycho/build/tools/getb64key.py $(DEFAULT_SYSTEM_DEV_CERTIFICATE).x509.pem > $(zip_root)/META/releasekey.txt
+	$(hide) vendor/guun/build/tools/getb64key.py $(DEFAULT_SYSTEM_DEV_CERTIFICATE).x509.pem > $(zip_root)/META/releasekey.txt
 endif
 	$(hide) echo "ota_override_device=$(OTA_SCRIPT_OVERRIDE_DEVICE)" >> $(zip_root)/META/misc_info.txt
 	@# Zip everything up, preserving symlinks and placing META/ files first to
@@ -2108,16 +2108,16 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE)
 	   $(if $(OEM_OTA_CONFIG), -o $(OEM_OTA_CONFIG)) \
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
 
-PSYCHO_TARGET_PACKAGE := $(PRODUCT_OUT)/$(PSYCHO_VERSION)-$(TARGET_DEVICE).zip
+GUUN_TARGET_PACKAGE := $(PRODUCT_OUT)/$(GUUN_VERSION)-$(TARGET_DEVICE).zip
 
 .PHONY: otapackage bacon
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
 bacon: otapackage
-	$(hide) ln -f $(INTERNAL_OTA_PACKAGE_TARGET) $(PSYCHO_TARGET_PACKAGE)
-	$(hide) $(MD5SUM) $(PSYCHO_TARGET_PACKAGE) | sed "s|$(PRODUCT_OUT)/||" > $(PSYCHO_TARGET_PACKAGE).md5sum
-	@echo "Package Complete: $(PSYCHO_TARGET_PACKAGE)" >&2
-	@echo -e "SIZE: "`ls -hal $(PSYCHO_TARGET_PACKAGE) | cut -d ' ' -f 5`
-	@echo -e "MD5: "`cat $(PSYCHO_TARGET_PACKAGE).md5sum | cut -d ' ' -f 1`
+	$(hide) ln -f $(INTERNAL_OTA_PACKAGE_TARGET) $(GUUN_TARGET_PACKAGE)
+	$(hide) $(MD5SUM) $(GUUN_TARGET_PACKAGE) | sed "s|$(PRODUCT_OUT)/||" > $(GUUN_TARGET_PACKAGE).md5sum
+	@echo "Package Complete: $(GUUN_TARGET_PACKAGE)" >&2
+	@echo -e "SIZE: "`ls -hal $(GUUN_TARGET_PACKAGE) | cut -d ' ' -f 5`
+	@echo -e "MD5: "`cat $(GUUN_TARGET_PACKAGE).md5sum | cut -d ' ' -f 1`
 
 endif    # build_ota_package
 # -----------------------------------------------------------------
