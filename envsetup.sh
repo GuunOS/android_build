@@ -1741,4 +1741,4 @@ check_bash_version && {
 
 export ANDROID_BUILD_TOP=$(gettop)
 
-. $ANDROID_BUILD_TOP/vendor/guun/build/envsetup.sh && . scripts/nova.sh
+#. $ANDROID_BUILD_TOP/vendor/guun/build/envsetup.sh && . scripts/nova.sh
