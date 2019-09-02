@@ -1,5 +1,17 @@
 # Put some miscellaneous rules here
 
+# Build system colors
+
+ifneq ($(BUILD_WITH_COLORS),0)
+  CL_RED="\033[31m"
+  CL_GRN="\033[32m"
+  CL_YLW="\033[33m"
+  CL_BLU="\033[34m"
+  CL_MAG="\033[35m"
+  CL_CYN="\033[36m"
+  CL_RST="\033[0m"
+endif
+
 # HACK: clear LOCAL_PATH from including last build target before calling
 # intermedites-dir-for
 LOCAL_PATH := $(BUILD_SYSTEM)
@@ -2108,16 +2120,27 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE)
 	   $(if $(OEM_OTA_CONFIG), -o $(OEM_OTA_CONFIG)) \
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
 
-GUUN_TARGET_PACKAGE := $(PRODUCT_OUT)/$(GUUN_VERSION)-$(TARGET_DEVICE).zip
+#GUUN_TARGET_PACKAGE := $(PRODUCT_OUT)/$(GUUN_VERSION)-$(TARGET_DEVICE).zip
+GUUN_TARGET_PACKAGE := $(PRODUCT_OUT)/GuunOS-v$(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(GUUN_POSTFIX)-$(GUUN_BUILD)GUUNICIAL.zip
 
 .PHONY: otapackage bacon
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
 bacon: otapackage
 	$(hide) ln -f $(INTERNAL_OTA_PACKAGE_TARGET) $(GUUN_TARGET_PACKAGE)
-	$(hide) $(MD5SUM) $(GUUN_TARGET_PACKAGE) | sed "s|$(PRODUCT_OUT)/||" > $(GUUN_TARGET_PACKAGE).md5sum
-	@echo "Package Complete: $(GUUN_TARGET_PACKAGE)" >&2
-	@echo -e "SIZE: "`ls -hal $(GUUN_TARGET_PACKAGE) | cut -d ' ' -f 5`
-	@echo -e "MD5: "`cat $(GUUN_TARGET_PACKAGE).md5sum | cut -d ' ' -f 1`
+	$(hide) $(MD5SUM) $(GUUN_TARGET_PACKAGE) > $(GUUN_TARGET_PACKAGE).md5sum
+	@echo -e ${CL_RST} ""
+	@echo -e ${CL_RST} "   _______                   _______   ______   "
+    @echo -e ${CL_RST} "  (_______)                 (_______) / _____)  "
+    @echo -e ${CL_RST} "   _   ___ _   _ _   _ ____  _     _ ( (____    "
+    @echo -e ${CL_RST} "  | | (_  | | | | | | |  _ \| |   | | \____ \   "
+    @echo -e ${CL_RST} "  | |___) | |_| | |_| | | | | |___| | _____) )  "
+    @echo -e ${CL_RST} "   \_____/|____/|____/|_| |_|\_____/ (______/   "
+	@echo -e ${CL_RST} "" ${CL_RST}
+	@echo -e ${CL_BLD}${CL_RED}"===============================-GuunOS complete-==============================="${CL_RED}
+	@echo -e ${CL_BLD}${CL_YLW}"Zip: "${CL_YLW} $(GUUN_TARGET_PACKAGE)${CL_RST}
+	@echo -e ${CL_BLD}${CL_YLW}"MD5: "${CL_YLW}" `cat $(GUUN_TARGET_PACKAGE).md5sum | awk '{print $$1}' `"${CL_RST}
+	@echo -e ${CL_BLD}${CL_YLW}"Size:"${CL_YLW}" `du -sh $(GUUN_TARGET_PACKAGE) | awk '{print $$1}' `"${CL_RST}
+	@echo -e ${CL_BLD}${CL_RED}"================================================================================"${CL_RED}
 
 endif    # build_ota_package
 # -----------------------------------------------------------------
