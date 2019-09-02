@@ -2128,20 +2128,20 @@ otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
 bacon: otapackage
 	$(hide) ln -f $(INTERNAL_OTA_PACKAGE_TARGET) $(GUUN_TARGET_PACKAGE)
 	$(hide) $(MD5SUM) $(GUUN_TARGET_PACKAGE) > $(GUUN_TARGET_PACKAGE).md5sum
-    @echo -e ${CL_RST} ""
-    @echo -e ${CL_RST} "   _______                   _______   ______   "
-    @echo -e ${CL_RST} "  (_______)                 (_______) / _____)  "
-    @echo -e ${CL_RST} "   _   ___ _   _ _   _ ____  _     _ ( (____    "
-    @echo -e ${CL_RST} "  | | (_  | | | | | | |  _ \| |   | | \____ \   "
-    @echo -e ${CL_RST} "  | |___) | |_| | |_| | | | | |___| | _____) )  "
-    @echo -e ${CL_RST} "   \_____/|____/|____/|_| |_|\_____/ (______/   "
-    @echo -e ${CL_RST} "" ${CL_RST}
+	@echo -e ${CL_RST} ""
+	@echo -e ${CL_RST} "   _______                   _______   ______   "
+	@echo -e ${CL_RST} "  (_______)                 (_______) / _____)  "
+	@echo -e ${CL_RST} "   _   ___ _   _ _   _ ____  _     _ ( (____    "
+	@echo -e ${CL_RST} "  | | (_  | | | | | | |  _ \| |   | | \____ \   "
+	@echo -e ${CL_RST} "  | |___) | |_| | |_| | | | | |___| | _____) )  "
+	@echo -e ${CL_RST} "   \_____/|____/|____/|_| |_|\_____/ (______/   "
+	@echo -e ${CL_RST} "" ${CL_RST}
 	@echo -e ${CL_BLD}${CL_RED}"===============================-GuunOS complete-==============================="${CL_RED}
 	@echo -e ${CL_BLD}${CL_YLW}"Zip: "${CL_YLW} $(GUUN_TARGET_PACKAGE)${CL_RST}
 	@echo -e ${CL_BLD}${CL_YLW}"MD5: "${CL_YLW}" `cat $(GUUN_TARGET_PACKAGE).md5sum | awk '{print $$1}' `"${CL_RST}
 	@echo -e ${CL_BLD}${CL_YLW}"Size:"${CL_YLW}" `du -sh $(GUUN_TARGET_PACKAGE) | awk '{print $$1}' `"${CL_RST}
 	@echo -e ${CL_BLD}${CL_RED}"================================================================================"${CL_RED}
-
+	
 endif    # build_ota_package
 # -----------------------------------------------------------------
 # The factory package
